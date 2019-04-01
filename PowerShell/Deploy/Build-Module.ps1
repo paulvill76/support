@@ -3,8 +3,11 @@ Try
     # Load config
     . ($PSScriptRoot + '\' + 'Get-Config.ps1')
     # Get next module version number
-    $ModuleVersion = Get-PSGalleryModuleVersion -Name:($ModuleName) -ReleaseType:('Major') #('Major', 'Minor', 'Patch')
 
+    $PSGalleryInfo = Get-PSGalleryModuleVersion -Name:($ModuleName) -ReleaseType:('Major') #('Major', 'Minor', 'Patch')
+    $ModuleVersion = $PSGalleryInfo.NextVersion
+    Write-Host ('Name:' + $PSGalleryInfo.Name + ';CurrentVersion:' + $PSGalleryInfo.Version + '; NextVersion:' + $ModuleVersion )
+    ###########################################################################
     # # Get predefined folder structure for module and create the structure
     # $ModuleFolders = (Get-ChildItem -Path:($Folder_ModuleTemplate) -Recurse -Directory).Where( { $_.FullName -match $ModuleFolderName })
     # ForEach ($ModuleFolder In $ModuleFolders)
@@ -29,6 +32,7 @@ Try
     # Create required files
     $File_TestsPs1 = ($File_TestsPs1_Template -f $Folder_Tests, $ModuleName, $ModuleVersion)
     $FileObject_TestsPs1 = If (!(Test-Path -Path:($File_TestsPs1))) { New-Item -ItemType:('File') -Path:($File_TestsPs1) }
+    ###########################################################################
     # Copy over module template files
     $TemplateFiles = Get-ChildItem -Path:($Folder_TemplateFiles) -Recurse -File -Exclude:('Temp.txt')
     ForEach ($TemplateFile In $TemplateFiles)
@@ -39,7 +43,9 @@ Try
     }
     ###########################################################################
     # Create ModuleManifest
-    New-JCModuleManifest -Path:($File_Psd1) `
+    Write-Host('Building New-JCModuleManifest')
+    New-JCModuleManifest -SourcePath:($File_Psd1.Replace($Folder_Module, $Folder_Module_Old)) `
+        -Path:($File_Psd1) `
         -FunctionsToExport:($Functions_Public.BaseName | Sort-Object) `
         -RootModule:((Get-Item -Path:($File_Psm1)).Name) `
         -FormatsToProcess:((Get-Item -Path:($File_Ps1Xml)).Name)

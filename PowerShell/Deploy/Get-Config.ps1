@@ -16,7 +16,7 @@ $GitSourceBranch = $env:BUILD_SOURCEBRANCHNAME
 $GitTargetBranch = $env:targetBranchName
 $ScriptRoot = Switch ($env:deployFolder) { $true { $env:deployFolder } Default { $PSScriptRoot } }
 $Folder_ModuleRootPath = (Get-Item -Path:($ScriptRoot)).Parent.FullName
-# For testing locally
+## For testing locally
 # $ModuleName = 'JumpCloud'
 # $ModuleFolderName = 'JumpCloud Module'
 # $JCAPIKEY = ''
@@ -64,4 +64,5 @@ Foreach ($DeployFunction In $DeployFunctions)
 }
 
 # TODO:Temporary work around
+If (Test-Path -Path:($Folder_Module + '\Tests')) { Remove-Item -Path:($Folder_Module + '\Tests') -Force -Recurse }
 If (Test-Path -Path:($Folder_Module + '\test')) { Rename-Item -Path:($Folder_Module + '\test') -NewName:('Tests') -Force }

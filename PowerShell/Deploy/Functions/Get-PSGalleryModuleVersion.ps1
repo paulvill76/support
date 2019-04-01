@@ -8,16 +8,23 @@ Function Get-PSGalleryModuleVersion
     $PowerShellGalleryModule = Find-Module -Name:($Name) -ErrorAction:('Ignore')
     If ([string]::IsNullOrEmpty($PowerShellGalleryModule))
     {
+        $ModuleVersion = [PSCustomObject]@{
+            'Name'    = $Name;
+            'Version' = 'N/A';
+            'Major'   = 'N/A';
+            'Minor'   = 'N/A';
+            'Patch'   = 'N/A';
+        }
         $NextVersion = Switch ($ReleaseType)
         {
-            'Major' { '1.0.0' }
-            'Minor' { '0.1.0' }
-            'Patch' { '0.0.1' }
+            'Major' { $ModuleVersion.Major = '1.0.0' }
+            'Minor' { $ModuleVersion.Minor = '0.1.0' }
+            'Patch' { $ModuleVersion.Patch = '0.0.1' }
         }
     }
     Else
     {
-        $CurrentModuleVersion = [PSCustomObject]@{
+        $ModuleVersion = [PSCustomObject]@{
             'Name'    = $PowerShellGalleryModule.Name;
             'Version' = $PowerShellGalleryModule.Version;
             'Major'   = [int]($PowerShellGalleryModule.Version -split '\.')[0];
@@ -26,13 +33,13 @@ Function Get-PSGalleryModuleVersion
         }
         Switch ($ReleaseType)
         {
-            'Major' { $CurrentModuleVersion.Major = $CurrentModuleVersion.Major + 1 }
-            'Minor' { $CurrentModuleVersion.Minor = $CurrentModuleVersion.Minor + 1 }
-            'Patch' { $CurrentModuleVersion.Patch = $CurrentModuleVersion.Patch + 1 }
+            'Major' { $ModuleVersion.Major = $ModuleVersion.Major + 1 }
+            'Minor' { $ModuleVersion.Minor = $ModuleVersion.Minor + 1 }
+            'Patch' { $ModuleVersion.Patch = $ModuleVersion.Patch + 1 }
         }
-        $NextVersion = ($CurrentModuleVersion.Major, $CurrentModuleVersion.Minor, $CurrentModuleVersion.Patch) -join '.'
-        # Add-Member -InputObject:($CurrentModuleVersion) -MemberType:('NoteProperty') -Name:('NextVersion') -Value:($NextVersion)
 
     }
-    Return $NextVersion
+    $NextVersion = ($ModuleVersion.Major, $ModuleVersion.Minor, $ModuleVersion.Patch) -join '.'
+    Add-Member -InputObject:($ModuleVersion) -MemberType:('NoteProperty') -Name:('NextVersion') -Value:($NextVersion)
+    Return $ModuleVersion
 }

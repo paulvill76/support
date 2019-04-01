@@ -1,14 +1,3 @@
-# $File_Psm1
-# $File_Ps1Xml
-# $Functions_Public.BaseName
-# $File_Psd1
-# $Folder_Module
-# $Folder_Module_Old
-# /Users/epanipinto/Documents/GitHub/support/PowerShell/JumpCloud Module/Private/NestedFunctions/New-DynamicParameter.ps1
-
-# $Path = $File_Psd1.Replace($Folder_Module, $Folder_Module_Old)
-
-
 Function New-JCModuleManifest
 {
     [cmdletbinding(SupportsShouldProcess = $True)]
@@ -16,6 +5,16 @@ Function New-JCModuleManifest
     DynamicParam
     {
         $Params = @()
+        $Params += @{
+            'Name'                            = 'SourcePath'
+            'Type'                            = [system.string]
+            'Mandatory'                       = $True
+            'Position'                        = 0;
+            'ValueFromPipeline'               = $True;
+            'ValueFromPipelineByPropertyName' = $True;
+            'ValidateNotNull'                 = $True;
+            'ValidateNotNullOrEmpty'          = $True;
+        }
         $NewModuleManifestParameterSets = (Get-Command -Name:('New-ModuleManifest')).ParameterSets
         ForEach ($NewModuleManifestParameterSet In $NewModuleManifestParameterSets)
         {
@@ -68,10 +67,9 @@ Function New-JCModuleManifest
     {
         # Create hash table to store variables
         $FunctionParameters = [ordered]@{ }
-        If (Test-Path -Path:($Path))
+        If (Test-Path -Path:($SourcePath))
         {
-            $File_Psd1 = Get-Item -Path:($Path)
-            $Path = $File_Psd1.FullName
+            $File_Psd1 = Get-Item -Path:($SourcePath)
             $CurrentModuleManifest = Import-LocalizedData -BaseDirectory:($File_Psd1.DirectoryName) -FileName:($File_Psd1.BaseName)
             # Add input parameters from function in to hash table and filter out unnecessary parameters
             $CurrentModuleManifest.GetEnumerator() | ForEach-Object { $FunctionParameters.Add($_.Key, $_.Value) | Out-Null }
@@ -100,10 +98,12 @@ Function New-JCModuleManifest
                     $FunctionParameters.Add($_.Key, $_.Value) | Out-Null
                 }
             }
+            # Remove the output path for splatting
+            $FunctionParameters.Remove('SourcePath') | Out-Null
         }
         Else
         {
-            Write-Warning ('Creating new module manifest. Please populate empty fields: ' + $Path)
+            Write-Warning ('Creating new module manifest. Please populate empty fields: ' + $SourcePath)
             New-ModuleManifest -Path:($Path)
         }
         Write-Debug ('Splatting Parameters');

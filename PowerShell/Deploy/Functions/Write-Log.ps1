@@ -2,7 +2,7 @@
 Function Write-Log
 {
     Param(
-        [Parameter(Mandatory = $true, Position = 0)][ValidateNotNullOrEmpty()]$string,
+        [Parameter(Mandatory = $true, Position = 0)][ValidateNotNullOrEmpty()]$Message,
         [Parameter(Mandatory = $false, Position = 1)][ValidateNotNullOrEmpty()] [string]$color = 'Gray',
         [Parameter(Mandatory = $false, Position = 2)][ValidateNotNullOrEmpty()] [bool]$showInConsole = $true,
         [Parameter(Mandatory = $false, Position = 3)][ValidateNotNullOrEmpty()] [bool]$exitInd = $false
@@ -26,7 +26,7 @@ Function Write-Log
             $VerboseForegroundColorOrg = $HostInfo.PrivateData.VerboseForegroundColor
             $HostInfo.PrivateData.VerboseForegroundColor = $color
         }
-        Write-Verbose ("`r`n" + $Error + $string)
+        Write-Verbose ("`r`n" + $Error + $Message)
         If ($HostInfo.Name -notin ('Default Host', 'ServerRemoteHost'))
         {
             $HostInfo.PrivateData.VerboseForegroundColor = $VerboseForegroundColorOrg
@@ -38,16 +38,16 @@ Function Write-Log
         $Error = "[EXITING SCRIPT]"
         If ($LogFullPath)
         {
-            ($Error + $string) | Out-File -FilePath:($LogFullPath) -Append -ErrorAction:($ErrorActionPreference) -WhatIf:($WhatIfPreference)
+            ($Error + $Message) | Out-File -FilePath:($LogFullPath) -Append -ErrorAction:($ErrorActionPreference) -WhatIf:($WhatIfPreference)
         }
-        Write-Error ($Error + $string)
+        Write-Error ($Error + $Message)
         Break
     }
     Else
     {
         If ($LogFullPath)
         {
-            ($Error + $string) | Out-File -FilePath:($LogFullPath) -Append -ErrorAction:($ErrorActionPreference) -WhatIf:($WhatIfPreference)
+            ($Error + $Message) | Out-File -FilePath:($LogFullPath) -Append -ErrorAction:($ErrorActionPreference) -WhatIf:($WhatIfPreference)
         }
     }
 }

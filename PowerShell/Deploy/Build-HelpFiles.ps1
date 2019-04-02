@@ -1,10 +1,10 @@
-# Load config
 . ($PSScriptRoot + '\' + 'Get-Config.ps1')
-# Import module
+Write-Host ('[status]Loaded config:' + $PSScriptRoot + $PathDeliminator + 'Get-Config.ps1')
+###########################################################################
+Write-Host ('[status]Importing current module: ' + $ModuleName)
 Import-Module ($File_Psm1) -Force
-# Install PlatyPS
+Write-Host ('[status]Installing module: PlatyPS')
 Install-Module -Name:('PlatyPS') -Force
-# Create/Update markdown help files
 Write-Host ('[status]Creating/Updating help files')
 $Functions_Public | ForEach-Object {
     $FunctionName = $_.BaseName

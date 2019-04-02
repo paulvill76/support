@@ -1,6 +1,6 @@
-# Load config
 . ($PSScriptRoot + '\' + 'Get-Config.ps1')
-# Publish to PowerShell Gallery
+Write-Host ('[status]Loaded config:' + $PSScriptRoot + $PathDeliminator + 'Get-Config.ps1')
+###########################################################################
 Write-Host ('[status]Publishing to PowerShell Gallery:' + $Folder_Module)
 Publish-Module -Path:($Folder_Module) -NuGetApiKey:($NuGetApiKey)
 

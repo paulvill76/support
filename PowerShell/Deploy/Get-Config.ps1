@@ -31,7 +31,6 @@ $WindowsDeliminator = '\'
 $UnixDeliminator = '/'
 $PathDeliminator = Switch ([environment]::OSVersion.Platform) { 'Win32NT' { $WindowsDeliminator }'Unix' { $UnixDeliminator } }
 # Define folder path variables
-$RequiredFolders = ('Docs', 'Private', 'Public', 'Tests', 'LICENSE', ($ModuleName + '.psm1'), ($ModuleName + '.psd1'))
 $Folder_Module = $Folder_ModuleRootPath + $PathDeliminator + $ModuleFolderName
 $Folder_Private = $Folder_Module + $PathDeliminator + 'Private'
 $Folder_Public = $Folder_Module + $PathDeliminator + 'Public'
@@ -41,14 +40,11 @@ $Folder_Docs = $Folder_Module + $PathDeliminator + 'Docs'
 # Define file path variables
 $File_Psm1 = $Folder_Module + $PathDeliminator + $ModuleName + '.psm1'
 $File_Psd1 = $Folder_Module + $PathDeliminator + $ModuleName + '.psd1'
-$File_License = $Folder_Module + $PathDeliminator + 'LICENSE' # Not used
-$File_Ps1Xml = $Folder_Module + $PathDeliminator + $ModuleName + '.Format.ps1xml'# Not used
-$File_HelpTxt = $Folder_HelpFiles + $PathDeliminator + 'about_' + $ModuleName + '.help.txt'# Not used
-$File_TestsPs1_Template = '{0}\{1}.{2}.Tests.ps1'# Not used
-$File_ModuleMd = $Folder_Docs + $PathDeliminator + $ModuleName + '.md'# Not used
+# Define list variables
+$RequiredFolders = ('Docs', 'Private', 'Public', 'Tests')
+$RequiredFiles = ('LICENSE', ($ModuleName + '.psm1'), ($ModuleName + '.psd1'))
 # Get module function names
 $Functions_Public = If (Test-Path -Path:($Folder_Public)) { Get-ChildItem -Path:($Folder_Public + $PathDeliminator + '*.ps1') -Recurse }
-$Functions_Private = If (Test-Path -Path:($Folder_Private)) { Get-ChildItem -Path:($Folder_Private + $PathDeliminator + '*.ps1') -Recurse } # Not used
 # Load deploy functions
 $DeployFunctions = @(Get-ChildItem -Path:($PSScriptRoot + '\Functions\*.ps1') -Recurse)
 Foreach ($DeployFunction In $DeployFunctions)

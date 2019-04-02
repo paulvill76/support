@@ -7,12 +7,12 @@ $ModuleVersion = $PSGalleryInfo.NextVersion
 Write-Host ('[status]PowerShell Gallery Name:' + $PSGalleryInfo.Name + ';CurrentVersion:' + $PSGalleryInfo.Version + '; NextVersion:' + $ModuleVersion )
 ###########################################################################
 Write-Host ('[status]Validate that module root structure is valid')
-ForEach ($RequiredFolder In $RequiredFolders)
+ForEach ($RequiredItem In ($RequiredFolders + $RequiredFiles))
 {
-    $RequiredFolderPath = $Folder_Module + $PathDeliminator + $RequiredFolder
-    If (!(Test-Path -Path:($RequiredFolderPath)))
+    $RequiredItemPath = $Folder_Module + $PathDeliminator + $RequiredItem
+    If (!(Test-Path -Path:($RequiredItemPath)))
     {
-        Write-Error ('A required folder path does not exist:' + $RequiredFolderPath)
+        Write-Error ('A required folder path does not exist:' + $RequiredItemPath)
     }
 }
 # ###########################################################################

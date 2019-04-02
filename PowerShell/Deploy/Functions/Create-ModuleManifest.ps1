@@ -5,16 +5,6 @@ Function New-JCModuleManifest
     DynamicParam
     {
         $Params = @()
-        $Params += @{
-            'Name'                            = 'SourcePath'
-            'Type'                            = [system.string]
-            'Mandatory'                       = $True
-            'Position'                        = 0;
-            'ValueFromPipeline'               = $True;
-            'ValueFromPipelineByPropertyName' = $True;
-            'ValidateNotNull'                 = $True;
-            'ValidateNotNullOrEmpty'          = $True;
-        }
         $NewModuleManifestParameterSets = (Get-Command -Name:('New-ModuleManifest')).ParameterSets
         ForEach ($NewModuleManifestParameterSet In $NewModuleManifestParameterSets)
         {
@@ -67,9 +57,9 @@ Function New-JCModuleManifest
     {
         # Create hash table to store variables
         $FunctionParameters = [ordered]@{ }
-        If (Test-Path -Path:($SourcePath))
+        If (Test-Path -Path:($Path))
         {
-            $File_Psd1 = Get-Item -Path:($SourcePath)
+            $File_Psd1 = Get-Item -Path:($Path)
             $CurrentModuleManifest = Import-LocalizedData -BaseDirectory:($File_Psd1.DirectoryName) -FileName:($File_Psd1.BaseName)
             # Add input parameters from function in to hash table and filter out unnecessary parameters
             $CurrentModuleManifest.GetEnumerator() | ForEach-Object { $FunctionParameters.Add($_.Key, $_.Value) | Out-Null }
@@ -98,12 +88,10 @@ Function New-JCModuleManifest
                     $FunctionParameters.Add($_.Key, $_.Value) | Out-Null
                 }
             }
-            # Remove the output path for splatting
-            $FunctionParameters.Remove('SourcePath') | Out-Null
         }
         Else
         {
-            Write-Warning ('Creating new module manifest. Please populate empty fields: ' + $SourcePath)
+            Write-Warning ('Creating new module manifest. Please populate empty fields: ' + $Path)
             New-ModuleManifest -Path:($Path)
         }
         Write-Debug ('Splatting Parameters');

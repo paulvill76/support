@@ -44,6 +44,7 @@ $RequiredFolders = ('Docs', 'Private', 'Public', 'Tests')
 $RequiredFiles = ('LICENSE', ($ModuleName + '.psm1'), ($ModuleName + '.psd1'))
 # Get module function names
 $Functions_Public = If (Test-Path -Path:($Folder_Public)) { Get-ChildItem -Path:($Folder_Public + $PathDeliminator + '*.ps1') -Recurse }
+$Functions_Private = If (Test-Path -Path:($Folder_Private)) { Get-ChildItem -Path:($Folder_Private + $PathDeliminator + '*.ps1') -Recurse }
 # Load deploy functions
 $DeployFunctions = @(Get-ChildItem -Path:($PSScriptRoot + '\Functions\*.ps1') -Recurse)
 Foreach ($DeployFunction In $DeployFunctions)

@@ -130,6 +130,12 @@ Function Get-JCObject
                     $FunctionParameters.Add('Paginate', $Paginate)
                     If ($ReturnCount) { $FunctionParameters.Add('ReturnCount', $ReturnCount) }
                 }
+                # Hacky logic for organization
+                If ($Type -in ('organization', 'organizations'))
+                {
+                    $Organization = Invoke-JCApi @FunctionParameters
+                    $FunctionParameters['Url'] = $Url + '/' + $Organization.$ById
+                }
                 # Run command
                 Write-Debug ('Splatting Parameters');
                 If ($DebugPreference -ne 'SilentlyContinue') { $FunctionParameters }

@@ -4,7 +4,7 @@ Function New-FolderRecursive
 {
     [cmdletbinding(SupportsShouldProcess = $True)]
     Param(
-        [string]$Path
+        [ValidateNotNullOrEmpty][string]$Path
         , [switch]$Force
     )
     $StartLocation = Get-Location

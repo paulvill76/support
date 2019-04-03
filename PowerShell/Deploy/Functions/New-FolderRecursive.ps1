@@ -36,7 +36,6 @@ Function New-FolderRecursive
     {
         $PathPart += $Directory
         $NewPath = $PathPart -join $PathDeliminator
-        Write-Host ($Directory)
         If ( !( Test-Path -Path:($NewPath) ))
         {
             If ($Force)

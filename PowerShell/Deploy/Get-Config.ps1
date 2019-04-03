@@ -1,5 +1,4 @@
 <#
-Notes: Search for: Not used
 References:
     -Building a PowerShell Module: https://ramblingcookiemonster.github.io/Building-A-PowerShell-Module/
     -Decorating PowerShell Objects (.ps1xml): https://ramblingcookiemonster.github.io/Decorating-Objects/

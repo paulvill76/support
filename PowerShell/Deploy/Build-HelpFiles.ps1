@@ -4,7 +4,7 @@ Write-Host ('[status]Loaded config:' + $PSScriptRoot + $PathDeliminator + 'Get-C
 Write-Host ('[status]Importing current module: ' + $ModuleName)
 Import-Module ($File_Psm1) -Force
 Write-Host ('[status]Installing module: PlatyPS')
-Install-Module -Name:('PlatyPS') -Force
+Install-Module -Name:('PlatyPS') -Force -Scope:('CurrentUser')
 Write-Host ('[status]Creating/Updating help files')
 $Functions_Public | ForEach-Object {
     $FunctionName = $_.BaseName

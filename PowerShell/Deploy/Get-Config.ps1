@@ -6,6 +6,8 @@ References:
     -How to Write a PowerShell Module Manifest: https://docs.microsoft.com/en-us/powershell/developer/module/how-to-write-a-powershell-module-manifest
     -BuildHelpers Invoke-Git.ps1: https://github.com/RamblingCookieMonster/BuildHelpers/blob/master/BuildHelpers/Public/Invoke-Git.ps1
 #>
+If (!(Get-PackageProvider -Name:('NuGet'))) { Install-PackageProvider -Name:('NuGet') -Scope:('CurrentUser') }
+
 # Set variables from Azure Pipelines
 $ModuleName = $env:moduleName
 $ModuleFolderName = $env:moduleFolderName
